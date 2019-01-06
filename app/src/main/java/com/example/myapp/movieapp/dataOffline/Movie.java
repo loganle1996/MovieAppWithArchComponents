@@ -1,19 +1,25 @@
-package com.example.myapp.movieapp.datasource;
+package com.example.myapp.movieapp.dataOffline;
 
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity(tableName = "movie_table")
-public class Movie {
+public class Movie implements Parcelable {
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "movie_id")
@@ -45,13 +51,22 @@ public class Movie {
         this.rating = rating;
     }
 
+    protected Movie(Parcel in) {
+        id = in.readInt();
+        posterPath = in.readString();
+        title = in.readString();
+        overView = in.readString();
+        rating = in.readDouble();
+    }
+
     //getters
     public int getId() {
         return id;
     }
 
     public String getPosterPath() {
-        return posterPath;
+        return String.format("https://image.tmdb.org/t/p/w342%s", posterPath);
+//        return posterPath;
     }
 
     public String getTitle() {
@@ -66,4 +81,30 @@ public class Movie {
         return rating;
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(posterPath);
+        dest.writeString(overView);
+        dest.writeString(title);
+        dest.writeDouble(rating);
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 }

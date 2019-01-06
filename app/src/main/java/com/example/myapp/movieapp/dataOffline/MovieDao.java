@@ -1,4 +1,4 @@
-package com.example.myapp.movieapp.datasource;
+package com.example.myapp.movieapp.dataOffline;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -13,7 +13,7 @@ public interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertMovie(Movie movie);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAllMovies(List<Movie> movies);
 
     @Query("DELETE FROM movie_table WHERE movie_id = :id")

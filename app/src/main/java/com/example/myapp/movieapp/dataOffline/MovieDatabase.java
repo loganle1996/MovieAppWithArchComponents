@@ -1,4 +1,4 @@
-package com.example.myapp.movieapp.datasource;
+package com.example.myapp.movieapp.dataOffline;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;

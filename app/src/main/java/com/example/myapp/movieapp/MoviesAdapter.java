@@ -1,21 +1,33 @@
 package com.example.myapp.movieapp;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.myapp.movieapp.datasource.Movie;
+import com.bumptech.glide.Glide;
+import com.example.myapp.movieapp.dataOffline.Movie;
+import com.example.myapp.movieapp.utils.ImageCacheManager;
+import com.example.myapp.movieapp.utils.MovieDownloadTask;
+import com.example.myapp.movieapp.utils.MyBitMapFactory;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
     private Context context;
     private List<Movie> movies;
+    private Map<Integer, Bitmap> bitmapMap;
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvTitle, tvOverView;
@@ -32,21 +44,20 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         void bind(Movie movie) {
             tvTitle.setText(movie.getTitle());
             tvOverView.setText(movie.getOverView());
-            tvOverView.setOnClickListener(v -> {
-
-            });
-
             //display image into imageView here
+//            Glide.with(context).
+//                    load(movie.getPosterPath())
+//                    .into(ivPoster);
 
         }
-
         @Override
         public void onClick(View v) {
             //navigate to another activity here
 
         }
     }
-    public void updateMovies(List<Movie> movies){
+
+    public void updateMovies(List<Movie> movies) {
         this.movies = movies;
         notifyDataSetChanged();
     }
@@ -55,6 +66,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     public MoviesAdapter(Context context, List<Movie> movies) {
         this.context = context;
         this.movies = movies;
+        this.bitmapMap = new HashMap<>();
     }
 
     @NonNull
@@ -68,6 +80,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         Movie movie = movies.get(position);
         viewHolder.bind(movie);
+
     }
 
     @Override
