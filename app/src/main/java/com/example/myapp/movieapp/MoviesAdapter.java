@@ -45,9 +45,9 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             tvTitle.setText(movie.getTitle());
             tvOverView.setText(movie.getOverView());
             //display image into imageView here
-//            Glide.with(context).
-//                    load(movie.getPosterPath())
-//                    .into(ivPoster);
+            Glide.with(context).
+                    load(movie.getPosterPath())
+                    .into(ivPoster);
 
         }
         @Override
