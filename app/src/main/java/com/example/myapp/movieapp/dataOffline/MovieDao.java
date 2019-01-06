@@ -16,6 +16,7 @@ public interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAllMovies(List<Movie> movies);
 
+
     @Query("DELETE FROM movie_table WHERE movie_id = :id")
     int deleteMovieById(int id);
 
@@ -27,4 +28,5 @@ public interface MovieDao {
 
     @Query("SELECT * FROM movie_table WHERE movie_id = :id")
     LiveData<Movie> getMovieById(int id);
+
 }

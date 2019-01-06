@@ -10,24 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.myapp.movieapp.dataOffline.Movie;
 import com.example.myapp.movieapp.utils.ImageCacheManager;
-import com.example.myapp.movieapp.utils.MovieDownloadTask;
-import com.example.myapp.movieapp.utils.MyBitMapFactory;
+import com.example.myapp.movieapp.viewmodels.MovieViewModel;
 
-import java.util.HashMap;
+import java.io.FileNotFoundException;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
     private Context context;
     private List<Movie> movies;
-    private Map<Integer, Bitmap> bitmapMap;
+    private MovieViewModel movieViewModel;
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView tvTitle, tvOverView;
@@ -44,18 +38,32 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         void bind(Movie movie) {
             tvTitle.setText(movie.getTitle());
             tvOverView.setText(movie.getOverView());
+            /*Logic: RecyclerView keeps calling onBindViewHolder
+             * 1. The first time recycler triggers onBindViewHolder method is ,when the image hasnt been downloaded (object image doesn't have local location)
+             *  -> download and save the image to a text file
+             *  -> update all movie objects in sql database, which automatically syncs back to movie objects in the UI
+             * 2. The second time when the recylcerView triggers onBindViewHolder, the movie object now has the imagelocation
+             * -> use that imageLocation to display the image*/
             //display image into imageView here
-            Glide.with(context).
-                    load(String.format("https://image.tmdb.org/t/p/w342%s", movie.getPosterPath()))
-                    .into(ivPoster);
-            Log.d("Logan", "bind: " + String.format("https://image.tmdb.org/t/p/w342%s", movie.getPosterPath()));
+            String imageLocation = movie.getLocalImageLocation();
+            if (imageLocation == null) {
+                movieViewModel.downloadAndSaveImage(movie, context);
+            } else {
+                try {
+                    ivPoster.setImageBitmap(ImageCacheManager.
+                            getBitMapFromStorage(movie.getLocalImageLocation()));
+                } catch (FileNotFoundException e) {
+                    Log.e("Logan", "bind: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
         }
 
         @Override
         public void onClick(View v) {
             //navigate to another activity here
-
         }
+
     }
 
     public void updateMovies(List<Movie> movies) {
@@ -64,10 +72,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     }
 
     //Create a constructor that takes in a context and list of movies
-    public MoviesAdapter(Context context, List<Movie> movies) {
+    public MoviesAdapter(Context context, List<Movie> movies, MovieViewModel movieViewModel) {
         this.context = context;
         this.movies = movies;
-        this.bitmapMap = new HashMap<>();
+        this.movieViewModel = movieViewModel;
     }
 
     @NonNull
@@ -81,7 +89,6 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         Movie movie = movies.get(position);
         viewHolder.bind(movie);
-
     }
 
     @Override

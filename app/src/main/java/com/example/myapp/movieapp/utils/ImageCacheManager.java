@@ -11,10 +11,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.List;
 
 public class ImageCacheManager {
-    public String saveImageToInternalStorage(Bitmap bitmapImage, Context context, int movieId) {
+    public static String saveImageToInternalStorage(Bitmap bitmapImage, Context context, int movieId) {
         String fileSavingImages = String.valueOf(movieId);
         File imageFile = new File(context.getFilesDir(), fileSavingImages);
         FileOutputStream outputStream = null;
@@ -37,8 +39,33 @@ public class ImageCacheManager {
     }
 
     public static Bitmap getBitMapFromStorage(String imagePath) throws FileNotFoundException {
-        File f = new File(imagePath);
+        File f = null;
+        try {
+            f = new File(imagePath);
+        } catch (Exception e) {
+            Log.e("Logan", "getBitMapFromStorage: " + e.getMessage());
+        }
         FileInputStream fileInputStream = new FileInputStream(f);
         return BitmapFactory.decodeStream(fileInputStream);
+    }
+
+    public static Bitmap downloadBitMapImage(String urlPath) {
+        InputStream inputStream = null;
+        try {
+            inputStream = (InputStream) new URL(urlPath).getContent();
+            return BitmapFactory.decodeStream(inputStream);
+        } catch (IOException e) {
+            Log.e("Logan", e.getMessage());
+            e.printStackTrace();
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 }

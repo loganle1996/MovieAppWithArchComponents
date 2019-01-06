@@ -4,6 +4,7 @@ package com.example.myapp.movieapp.dataOffline;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -32,7 +33,8 @@ public class Movie implements Parcelable {
     private String overView;
     @ColumnInfo(name = "movie_rating")
     private double rating;
-
+    @ColumnInfo(name = "local_image_location")
+    private String localImageLocation;
     //A constructor to create a movie object when pulling data from the server
     @Ignore
     public Movie(@NonNull JSONObject jsonObject) throws JSONException {
@@ -80,6 +82,13 @@ public class Movie implements Parcelable {
         return rating;
     }
 
+    public String getLocalImageLocation() {
+        return localImageLocation;
+    }
+
+    public void setLocalImageLocation(String localImageLocation) {
+        this.localImageLocation = localImageLocation;
+    }
 
     @Override
     public int describeContents() {

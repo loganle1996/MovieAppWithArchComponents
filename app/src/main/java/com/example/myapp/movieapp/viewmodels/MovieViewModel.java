@@ -33,7 +33,10 @@ public class MovieViewModel extends AndroidViewModel {
     public void refreshData(Context context) {
         movieRepository.refreshData(context);
     }
-    //all methods to manage data
 
+    //all methods to manage data
+    public void downloadAndSaveImage(Movie movie, Context context) {
+        movieRepository.downloadAndSaveImage(movie, context);
+    }
 
 }

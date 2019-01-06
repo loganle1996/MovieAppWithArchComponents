@@ -7,10 +7,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.myapp.movieapp.MainActivity;
 import com.example.myapp.movieapp.utils.ImageCacheManager;
-import com.example.myapp.movieapp.utils.MyBitMapFactory;
-import com.example.myapp.movieapp.utils.NetworkHelper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -24,8 +21,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import cz.msebera.android.httpclient.Header;
-
-import static com.loopj.android.http.AsyncHttpClient.log;
 
 public class Repository {
     private static final String MOVIE_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed";
@@ -104,5 +99,19 @@ public class Repository {
 
     }
 
+    public void downloadAndSaveImage(Movie movie, Context context) {
+        final String[] imageLocation = {movie.getLocalImageLocation()};
+        executor.execute(() -> {
+            Bitmap bitmap = ImageCacheManager.downloadBitMapImage(String.format("https://image.tmdb.org/t/p/w342%s", movie.getPosterPath()));
+            imageLocation[0] = ImageCacheManager.saveImageToInternalStorage(bitmap, context, movie.getId());
+            movie.setLocalImageLocation(imageLocation[0]);
+            insertMovie(movie);
+        });
+    }
+    private void insertMovie(Movie movie) {
+        executor.execute(() -> {
+            mMovieDao.insertMovie(movie);
+        });
+    }
 
 }
