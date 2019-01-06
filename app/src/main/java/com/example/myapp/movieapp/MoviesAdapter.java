@@ -46,10 +46,11 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
             tvOverView.setText(movie.getOverView());
             //display image into imageView here
             Glide.with(context).
-                    load(movie.getPosterPath())
+                    load(String.format("https://image.tmdb.org/t/p/w342%s", movie.getPosterPath()))
                     .into(ivPoster);
-
+            Log.d("Logan", "bind: " + String.format("https://image.tmdb.org/t/p/w342%s", movie.getPosterPath()));
         }
+
         @Override
         public void onClick(View v) {
             //navigate to another activity here

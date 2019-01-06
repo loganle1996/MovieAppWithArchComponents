@@ -74,7 +74,6 @@ public class Repository {
                     //save data to local database,data should be automatically synced to the UI
                     insertAllMovies(onlineData);
                     //download images
-                    Log.d("Logan", "onSuccess: " + onlineData.size());
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.e("Logan", e.getMessage());
