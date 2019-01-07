@@ -22,7 +22,7 @@ import java.util.List;
 @Entity(tableName = "movie_table")
 public class Movie implements Parcelable {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey()
     @ColumnInfo(name = "movie_id")
     private int id;
     @ColumnInfo(name = "image_poster_path")
