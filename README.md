@@ -24,7 +24,7 @@ Here's a walkthrough of implemented user stories:
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
 - [Glide](https://github.com/bumptech/glide) - Image loading and caching library for Android
-
+- [Room persistance] (https://developer.android.com/topic/libraries/architecture/room) - Caching all movie objects in sql database using Room persistance API
 ## License
 
     Copyright [2018] [Logan Le]
