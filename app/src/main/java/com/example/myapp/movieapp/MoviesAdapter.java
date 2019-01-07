@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.myapp.movieapp.dataOffline.Movie;
 import com.example.myapp.movieapp.utils.ImageCacheManager;
 import com.example.myapp.movieapp.viewmodels.MovieViewModel;
@@ -38,24 +39,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         void bind(Movie movie) {
             tvTitle.setText(movie.getTitle());
             tvOverView.setText(movie.getOverView());
-            /*Logic: RecyclerView keeps calling onBindViewHolder
-             * 1. The first time recycler triggers onBindViewHolder method is ,when the image hasnt been downloaded (object image doesn't have local location)
-             *  -> download and save the image to a text file
-             *  -> update all movie objects in sql database, which automatically syncs back to movie objects in the UI
-             * 2. The second time when the recylcerView triggers onBindViewHolder, the movie object now has the imagelocation
-             * -> use that imageLocation to display the image*/
-            //display image into imageView here
-            String imageLocation = movie.getLocalImageLocation();
-            if (imageLocation == null) {
-                movieViewModel.downloadAndSaveImage(movie, context);
-            } else {
-                try {
-                    ivPoster.setImageBitmap(ImageCacheManager.
-                            getBitMapFromStorage(movie.getLocalImageLocation()));
-                } catch (FileNotFoundException e) {
-                    Log.e("Logan", "bind: " + e.getMessage());
-                    e.printStackTrace();
-                }
+            try {
+                ivPoster.setImageBitmap(ImageCacheManager.
+                        getBitMapFromStorage(movie.getLocalImageLocation()));
+            } catch (FileNotFoundException e) {
+                Log.e("Logan", "bind: " + e.getMessage());
+                e.printStackTrace();
             }
         }
 

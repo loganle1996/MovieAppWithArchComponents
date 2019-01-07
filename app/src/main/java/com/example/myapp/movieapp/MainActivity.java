@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         //RecyclerView(adapter) gets new livedata (updatedDataList) and automatically updates its UI.
         //(how to update ? programmer must specify when defining an observer)
         subcribeData();
-        //Attempting to refresh data when first open the app
+        //Attempting to refresh data when first opening the app
         refreshDataOnline(this);
         final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_id);
         swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,

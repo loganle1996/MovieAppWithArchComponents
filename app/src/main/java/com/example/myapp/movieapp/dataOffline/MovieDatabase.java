@@ -1,5 +1,6 @@
 package com.example.myapp.movieapp.dataOffline;
 
+import android.app.Application;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
@@ -15,10 +16,10 @@ public abstract class MovieDatabase extends RoomDatabase {
     //an abstract method that returns
     public abstract MovieDao getMovieDao();
 
-    public static MovieDatabase getInstance(final Context context) {
+    public static MovieDatabase getInstance(final Application application) {
         if (movieDatabase == null) {
             synchronized (MovieDatabase.class) {
-                movieDatabase = Room.databaseBuilder(context.getApplicationContext(),
+                movieDatabase = Room.databaseBuilder(application.getApplicationContext(),
                         MovieDatabase.class, //
                         DATABASE_NAME).build();
             }

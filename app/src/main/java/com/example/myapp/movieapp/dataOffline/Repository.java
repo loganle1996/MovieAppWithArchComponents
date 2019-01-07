@@ -1,6 +1,7 @@
 package com.example.myapp.movieapp.dataOffline;
 
 
+import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.myapp.movieapp.utils.ImageCacheManager;
+import com.example.myapp.movieapp.utils.MovieSavingTask;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -28,19 +30,21 @@ public class Repository {
     private LiveData<List<Movie>> mMovies;
     private static Repository movieRepository = null;
     private Executor executor;
+    private Application application;
 
     //Create a private constructor because we are using singleton pattern
-    private Repository(Context context) {
+    private Repository(Application application) {
         //create a LOCAL database to obtain dao object
-        MovieDatabase movieDatabase = MovieDatabase.getInstance(context);
+        MovieDatabase movieDatabase = MovieDatabase.getInstance(application);
         mMovieDao = movieDatabase.getMovieDao();
         mMovies = mMovieDao.getAllMovies(); // get all movies using Dao object
         executor = Executors.newSingleThreadExecutor();
+        this.application = application;
     }
 
-    public static Repository getInstance(Context context) {
+    public static Repository getInstance(Application application) {
         if (movieRepository == null) {
-            movieRepository = new Repository(context);
+            movieRepository = new Repository(application);
         }
         return movieRepository;
     }
@@ -56,8 +60,8 @@ public class Repository {
     }
 
 
-    public List<Movie> refreshData(Context context) {
-        List<Movie> onlineData = new ArrayList<>();
+    public void refreshData(Context context) {
+        ArrayList<Movie> onlineData = new ArrayList<>();
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(MOVIE_URL, new JsonHttpResponseHandler() {
             //define a call back method
@@ -67,7 +71,7 @@ public class Repository {
                     JSONArray movieJsonArray = response.getJSONArray("results");
                     convertJsonArrayToMovieList(movieJsonArray, onlineData);
                     //save data to local database,data should be automatically synced to the UI
-                    insertAllMovies(onlineData);
+                    downloadImagesAndInsertAllMovies(onlineData);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.e("Logan", e.getMessage());
@@ -81,36 +85,28 @@ public class Repository {
                 Toast.makeText(context, "Cannot refresh", Toast.LENGTH_SHORT).show();
             }
         });
-        return onlineData;
     }
 
     /*Room api doesn't allow any transaction with sql database on the main thread,
      * avoiding poor performance. Any other transactions should be implemented below here*/
-    public void insertAllMovies(List<Movie> movieList) {
-        try {
-            executor.execute(() -> {
-                Log.d("Logan", "inRepository");
-                mMovieDao.insertAllMovies(movieList);
-            });
-        } catch (Exception e) {
-            Log.e("Logan", e.getMessage());
-        }
-
+    public void downloadImagesAndInsertAllMovies(ArrayList<Movie> movieList) {
+        MovieSavingTask movieSavingTask = new MovieSavingTask(mMovieDao, application);
+        movieSavingTask.execute(movieList);
     }
-
-    public void downloadAndSaveImage(Movie movie, Context context) {
-        final String[] imageLocation = {movie.getLocalImageLocation()};
-        executor.execute(() -> {
-            Bitmap bitmap = ImageCacheManager.downloadBitMapImage(String.format("https://image.tmdb.org/t/p/w342%s", movie.getPosterPath()));
-            imageLocation[0] = ImageCacheManager.saveImageToInternalStorage(bitmap, context, movie.getId());
-            movie.setLocalImageLocation(imageLocation[0]);
-            insertMovie(movie);
-        });
-    }
-    private void insertMovie(Movie movie) {
-        executor.execute(() -> {
-            mMovieDao.insertMovie(movie);
-        });
-    }
-
+//
+//    public void downloadAndSaveImage(Movie movie, Context context) {
+//        final String[] imageLocation = {movie.getLocalImageLocation()};
+//        executor.execute(() -> {
+//            Bitmap bitmap = ImageCacheManager.downloadBitMapImage(String.format("https://image.tmdb.org/t/p/w342%s", movie.getPosterPath()));
+//            imageLocation[0] = ImageCacheManager.saveImageToInternalStorage(bitmap, context, movie.getId());
+//            movie.setLocalImageLocation(imageLocation[0]);
+//            insertMovie(movie);
+//        });
+//    }
+//
+//    private void insertMovie(Movie movie) {
+//        executor.execute(() -> {
+//            mMovieDao.insertMovie(movie);
+//        });
+//    }
 }
