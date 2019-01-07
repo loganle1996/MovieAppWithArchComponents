@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private void refreshDataOnline(Context context) {
         if (NetworkHelper.hasNetworkAccess(this)) {
             movieViewModel.refreshData(context);
+
         } else {
             //show all offline local movies here
             Toast.makeText(this, "No wifi connection", Toast.LENGTH_LONG).show();

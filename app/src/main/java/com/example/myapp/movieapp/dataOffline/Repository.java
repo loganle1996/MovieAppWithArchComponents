@@ -90,6 +90,9 @@ public class Repository {
     /*Room api doesn't allow any transaction with sql database on the main thread,
      * avoiding poor performance. Any other transactions should be implemented below here*/
     public void downloadImagesAndInsertAllMovies(ArrayList<Movie> movieList) {
+//        movieList.stream().forEach(movie -> {
+//
+//        });
         MovieSavingTask movieSavingTask = new MovieSavingTask(mMovieDao, application);
         movieSavingTask.execute(movieList);
     }

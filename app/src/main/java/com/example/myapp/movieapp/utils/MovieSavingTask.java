@@ -22,15 +22,14 @@ public class MovieSavingTask extends AsyncTask<ArrayList<Movie>, Void, Void> {
     @Override
     protected Void doInBackground(ArrayList<Movie>... params) {
         ArrayList<Movie> arrayList = params[0];
-        for (Movie movie : arrayList) {
+        arrayList.stream().forEach(movie -> {
             String imageUrl = String.format("https://image.tmdb.org/t/p/w342%s", movie.getPosterPath());
             Bitmap bitmap = ImageCacheManager.downloadBitMapImage(imageUrl);
             String imageLocalLocation = ImageCacheManager.saveImageToInternalStorage(bitmap, application, movie.getId());
             movie.setLocalImageLocation(imageLocalLocation);
             //update movie in the database
             movieDao.insertMovie(movie);
-            Log.d("Logan", "doInBackground: " + movie.getTitle());
-        }
+        });
         return null;
     }
 
