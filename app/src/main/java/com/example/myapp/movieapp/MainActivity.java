@@ -3,12 +3,15 @@ package com.example.myapp.movieapp;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.example.myapp.movieapp.dataOffline.Movie;
 import com.example.myapp.movieapp.utils.NetworkHelper;
 import com.example.myapp.movieapp.viewmodels.MovieViewModel;
@@ -42,23 +45,25 @@ public class MainActivity extends AppCompatActivity {
         //RecyclerView(adapter) gets new livedata (updatedDataList) and automatically updates its UI.
         //(how to update ? programmer must specify when defining an observer)
         subcribeData();
-        //temporary should be placed in repository
-//        LocalBroadcastManager.getInstance(getApplicationContext())
-//                .registerReceiver(mBroadcastReceiver,
-//                        new IntentFilter(MyService.MY_SERVICE_MESSAGE));
+        //Attempting to refresh data when first open the app
         refreshDataOnline(this);
+        final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_id);
+        swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            refreshDataOnline(this);
+            new Handler().postDelayed(() -> {
+                swipeRefreshLayout.setRefreshing(false);
+            }, 1000);
+        });
     }
 
     //This method should also be defined in the repository
     private void refreshDataOnline(Context context) {
-
         if (NetworkHelper.hasNetworkAccess(this)) {
-            Button refreshBtn = findViewById(R.id.btn_refresh);
-            refreshBtn.setOnClickListener(v -> {
-                movieViewModel.refreshData(context);
-            });
-
-
+            movieViewModel.refreshData(context);
         } else {
             //show all offline local movies here
             Toast.makeText(this, "No wifi connection", Toast.LENGTH_LONG).show();

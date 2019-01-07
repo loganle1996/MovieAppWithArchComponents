@@ -68,7 +68,6 @@ public class Repository {
                     convertJsonArrayToMovieList(movieJsonArray, onlineData);
                     //save data to local database,data should be automatically synced to the UI
                     insertAllMovies(onlineData);
-                    //download images
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.e("Logan", e.getMessage());
