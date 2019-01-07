@@ -39,13 +39,15 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         void bind(Movie movie) {
             tvTitle.setText(movie.getTitle());
             tvOverView.setText(movie.getOverView());
-            try {
-                ivPoster.setImageBitmap(ImageCacheManager.
-                        getBitMapFromStorage(movie.getLocalImageLocation()));
-            } catch (FileNotFoundException e) {
-                Log.e("Logan", "bind: " + e.getMessage());
-                e.printStackTrace();
-            }
+            Glide.with(context).load(String.format("https://image.tmdb.org/t/p/w342%s", movie.getPosterPath()))
+                    .into(ivPoster);
+//            try {
+////                ivPoster.setImageBitmap(ImageCacheManager.
+////                        getBitMapFromStorage(movie.getLocalImageLocation()));
+//            } catch (FileNotFoundException e) {
+//                Log.e("Logan", "bind: " + e.getMessage());
+//                e.printStackTrace();
+//            }
         }
 
         @Override

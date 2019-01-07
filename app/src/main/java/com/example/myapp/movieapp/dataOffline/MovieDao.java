@@ -23,7 +23,7 @@ public interface MovieDao {
     @Query("DELETE FROM MOVIE_TABLE")
     void deleteAllNotes();
 
-    @Query("SELECT * FROM movie_table")
+    @Query("SELECT * FROM movie_table ORDER BY movie_rating DESC")
     LiveData<List<Movie>> getAllMovies();
 
     @Query("SELECT * FROM movie_table WHERE movie_id = :id")

@@ -1,12 +1,9 @@
 package com.example.myapp.movieapp.utils;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.mtp.MtpObjectInfo;
 import android.os.AsyncTask;
-import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.example.myapp.movieapp.dataOffline.Movie;
 import com.example.myapp.movieapp.dataOffline.MovieDao;
@@ -32,8 +29,13 @@ public class MovieSavingTask extends AsyncTask<ArrayList<Movie>, Void, Void> {
             movie.setLocalImageLocation(imageLocalLocation);
             //update movie in the database
             movieDao.insertMovie(movie);
+            Log.d("Logan", "doInBackground: " + movie.getTitle());
         }
         return null;
     }
 
+    @Override
+    protected void onPostExecute(Void aVoid) {
+        super.onPostExecute(aVoid);
+    }
 }

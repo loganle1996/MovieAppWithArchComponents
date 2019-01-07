@@ -47,6 +47,11 @@ public class MainActivity extends AppCompatActivity {
         subcribeData();
         //Attempting to refresh data when first opening the app
         refreshDataOnline(this);
+
+        onRefreshListen();
+    }
+
+    private void onRefreshListen() {
         final SwipeRefreshLayout swipeRefreshLayout = findViewById(R.id.swipe_id);
         swipeRefreshLayout.setColorScheme(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
