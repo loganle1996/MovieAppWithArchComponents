@@ -9,6 +9,7 @@ Time spent: **a week** hours spent in total
 The following **required** functionality is completed:
 
 * [x] The app shows all the lastest movies currently playing in theaters if the mobile device has network
+* [x] The movies are sorted by ratings from in descending order
 * [x] If there is no connection, the app only shows lastest movies loaded to the mobile device when the last time it was opened.
 * [x] If there is no connection, the app will also send the message to the user that the mobile device is not connected to the network
 * [x] The user can swipe down to refresh to update for lastest movies.
@@ -17,7 +18,7 @@ The following **required** functionality is completed:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://media.giphy.com/media/yN5ThGXtiCKDq5UoHS/giphy.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://media.giphy.com/media/2rABLEwNhCFOsXC3pM/giphy.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 
 ## Open-source libraries used
