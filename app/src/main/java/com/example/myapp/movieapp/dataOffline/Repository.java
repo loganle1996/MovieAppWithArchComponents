@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.example.myapp.movieapp.utils.ImageCacheManager;
 import com.example.myapp.movieapp.utils.MovieSavingTask;
+import com.example.myapp.movieapp.utils.NetworkHelper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -60,7 +61,15 @@ public class Repository {
     }
 
 
-    public void refreshData(Context context) {
+    public void refreshData() {
+        if (NetworkHelper.hasNetworkAccess(application)) {
+            getOnlineData();
+        } else {
+            Toast.makeText(application, "Couldn't refresh", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void getOnlineData() {
         ArrayList<Movie> onlineData = new ArrayList<>();
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(MOVIE_URL, new JsonHttpResponseHandler() {
@@ -82,7 +91,7 @@ public class Repository {
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 Log.e("Logan", "onFailure: " + errorResponse.toString());
-                Toast.makeText(context, "Cannot refresh", Toast.LENGTH_SHORT).show();
+                Toast.makeText(application, "Cannot refresh", Toast.LENGTH_SHORT).show();
             }
         });
     }

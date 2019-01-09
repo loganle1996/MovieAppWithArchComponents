@@ -30,8 +30,8 @@ public class MovieViewModel extends AndroidViewModel {
         return movieList;
     }
 
-    public void refreshData(Context context) {
-        movieRepository. refreshData(context);
+    public void refreshData() {
+        movieRepository. refreshData();
     }
 
     //all methods to manage data

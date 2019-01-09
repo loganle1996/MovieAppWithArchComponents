@@ -8,7 +8,7 @@ import android.content.Context;
 
 /*Creating a database is quite expensive -> using singleton pattern */
 //define a database for movie class
-@Database(entities = {Movie.class}, version = 1)
+@Database(entities = {Movie.class}, version = 1, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
     public static final String DATABASE_NAME = "movie_database";
     private static MovieDatabase movieDatabase;

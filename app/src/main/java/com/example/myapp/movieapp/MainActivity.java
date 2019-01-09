@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         //(how to update ? programmer must specify when defining an observer)
         subcribeData();
         //Attempting to refresh data when first opening the app
-        refreshDataOnline(this);
+        refreshDataOnline();
 
         onRefreshListen();
     }
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            refreshDataOnline(this);
+            refreshDataOnline();
             new Handler().postDelayed(() -> {
                 swipeRefreshLayout.setRefreshing(false);
             }, 1000);
@@ -66,15 +66,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //This method should also be defined in the repository
-    private void refreshDataOnline(Context context) {
-        if (NetworkHelper.hasNetworkAccess(this)) {
-            movieViewModel.refreshData(context);
-
-        } else {
-            //show all offline local movies here
-            Toast.makeText(this, "No wifi connection", Toast.LENGTH_LONG).show();
-        }
-
+    private void refreshDataOnline() {
+        movieViewModel.refreshData();
     }
 
     private void subcribeData() {
