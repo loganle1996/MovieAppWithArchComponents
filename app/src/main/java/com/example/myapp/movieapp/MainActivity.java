@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         subcribeData();
         //Attempting to refresh data when first opening the app
         refreshDataOnline();
-
         onRefreshListen();
     }
 

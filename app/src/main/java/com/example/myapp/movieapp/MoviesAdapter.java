@@ -1,6 +1,7 @@
 package com.example.myapp.movieapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -17,22 +18,26 @@ import com.example.myapp.movieapp.utils.ImageCacheManager;
 import com.example.myapp.movieapp.viewmodels.MovieViewModel;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
     private Context context;
     private List<Movie> movies;
     private MovieViewModel movieViewModel;
+    public static final String MVBUNDLE = "MVBUNDLE";
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvTitle, tvOverView;
         private ImageView ivPoster;
+        private View container;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverView = itemView.findViewById(R.id.tvOverView);
             ivPoster = itemView.findViewById(R.id.ivPoster);
+            container = itemView.findViewById(R.id.container);
         }
 
 
@@ -45,13 +50,12 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
                         getBitMapFromStorage(movie.getLocalImageLocation()));
             } catch (FileNotFoundException e) {
                 Log.e("Logan", "bind: " + e.getMessage());
-                e.printStackTrace();
             }
-        }
-
-        @Override
-        public void onClick(View v) {
-            //navigate to another activity here
+            container.setOnClickListener(v -> {
+                Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra(MVBUNDLE, movie);
+                context.startActivity(intent);
+            });
         }
 
     }

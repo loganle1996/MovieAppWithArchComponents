@@ -35,6 +35,7 @@ public class Movie implements Parcelable {
     private double rating;
     @ColumnInfo(name = "local_image_location")
     private String localImageLocation;
+
     //A constructor to create a movie object when pulling data from the server
     @Ignore
     public Movie(@NonNull JSONObject jsonObject) throws JSONException {
@@ -90,6 +91,7 @@ public class Movie implements Parcelable {
         this.localImageLocation = localImageLocation;
     }
 
+    //for Parcelable
     @Override
     public int describeContents() {
         return 0;
