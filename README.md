@@ -1,6 +1,6 @@
 # MovieAppWithArchComponents
 
-**Movie App** shows the latest movies currently playing in theaters. The app utilizes the Movie Database API to display images and basic information about these movies to the user.
+**Movie App** shows the latest movies currently playing in theaters. The app utilizes the Google Component Architecture design pattern to display images and basic information about these movies to the user.
 
 Time spent: **a week** hours spent in total
 
